@@ -21,4 +21,4 @@ for img in PoolcamReader(URL):
   x, y, w, h = cv2.boundingRect(cnt)
   cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
   cv2.imshow('threshold', img)
-  cv2.waitKey()
+  cv2.waitKey(10)
