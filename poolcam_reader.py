@@ -16,3 +16,4 @@ class PoolcamReader(object):
       print("Status was {}".format(status))
       raise StopIteration()
     return frame
+
