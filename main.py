@@ -3,7 +3,7 @@ import numpy as np
 from cv_util import CVUtil
 from poolcam_reader import PoolcamReader
 
-URL = 'http://10.0.1.102:8081/frame.mjpg'
+URL = 'http://10.0.16.2:8081/frame.mjpg'
 
 def find_play_area(imgs):
   rects = zip(*map(CVUtil.find_biggest_rect, imgs)) # ([x, x, x], [y, y, y], ...)

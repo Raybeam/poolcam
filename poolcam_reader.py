@@ -6,6 +6,8 @@ class PoolcamReader(object):
   def __init__(self, url):
     self.url = url
     self.cap = cv2.VideoCapture(url)
+    if not self.cap.isOpened():
+      raise ValueError("Unable to open capture at {}".format(url))
 
   def __iter__(self):
     return self
@@ -13,7 +15,6 @@ class PoolcamReader(object):
   def __next__(self):
     status, frame = self.cap.read()
     if not status:
-      print("Status was {}".format(status))
-      raise StopIteration()
+      raise ValueError("Unable to stream images: status was {}".format(status))
     return frame
 
