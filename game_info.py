@@ -29,6 +29,7 @@ class GameInfo(object):
     self.URL = URL
     self.reader = PoolcamReader(URL)
     self.balls = {name: None for name in self.ball_colors}
+    self.display_colors = {name: list(map(lambda c: sum(c)/2, zip(*r))) for name, r in self.ball_colors.items()}
 
   def calibrate(self):
     """Set up pre-game stuff, such as finding background and lighting."""
@@ -65,9 +66,21 @@ class GameInfo(object):
     # Render balls
     for ball, pos in self.balls.items():
       if pos is not None:
-        c_x, c_y, c_r = pos
-        cv2.circle(img, (c_x, c_y), c_r, (0, 0, 255), 2)
-        cv2.circle(img, (c_x, c_y), 3, (255, 0, 0), 2)
+        self.render_ball(img, ball, pos)
+
+    return img
+
+  def render_ball(self, img, ball, pos):
+    c_x, c_y, c_r = pos
+    cv2.circle(img, (c_x, c_y), c_r, self.display_colors[ball], 2)
+    cv2.circle(img, (c_x, c_y), 3, (0, 0, 255), 2)
+
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    fontScale = 1
+    fontColor = (255,255,255)
+    lineType = 2
+
+    cv2.putText(img, ball, (c_x, c_y), font, fontScale, fontColor, lineType)
 
     return img
 

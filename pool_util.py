@@ -37,4 +37,3 @@ def find_ball(img, color_boundary, minRadius=5, maxRadius=20):
   if candidates is None:
     return None
   return candidates[0][0]
-
