@@ -17,25 +17,18 @@ def find_play_area(imgs):
   means = map(np.mean, rects)
   return tuple(map(int, means))
 
-ball_detector = cv2.SimpleBlobDetector_create()
+def mask(img, boundary):
+  lower = np.array(boundary[0], dtype="uint8")
+  upper = np.array(boundary[1], dtype="uint8")
+  mask = cv2.inRange(img, lower, upper)
+  return cv2.bitwise_and(img, img, mask=mask)
 
-
-def mask_colors(img, boundaries):
-  result = {}
-  for name, boundary in boundaries.items():
-    lower = np.array(boundary[0], dtype="uint8")
-    upper = np.array(boundary[1], dtype="uint8")
-
-    mask = cv2.inRange(img, lower, upper)
-    result[name] = cv2.bitwise_and(img, img, mask=mask)
-  return result
-
-def find_ball(masked_ball):
-  """Finds count balls."""
-  img = cv2.cvtColor(masked_ball, cv2.COLOR_BGR2GRAY)
+def find_ball(img, color_boundary):
+  """Finds a ball in img based on the color boundary."""
+  img = mask(img, color_boundary)
+  img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
   cv2.GaussianBlur(img, (9, 9), 2);
   candidates = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 3, 10, minRadius=5, maxRadius=30)#, None, 10, 50, 5, 500)
-  print(candidates)
   if candidates is None:
     return None
   return candidates[0][0]
