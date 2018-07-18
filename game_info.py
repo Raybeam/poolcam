@@ -50,11 +50,11 @@ class GameInfo(object):
     cv2.waitKey(10)
 
   def stream(self):
-    """call step, render, and cv2.imshow for as long as we have images."""
+    """call step and render for as long as we have images."""
     for img in self.reader:
       self.step(img)
       img = self.render(img)
-      cv2.imshow('poolcam', img)
+      yield img
 
   def render(self, img):
     """Marks up an image based on our current state."""
