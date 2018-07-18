@@ -20,7 +20,7 @@ class GameInfo(object):
       render: Marks up an image based on our current state.
       stream: call step, render, and cv2.imshow for as long as we have images.
   """
-  ball_radius = (10, 20)
+  ball_radius = (5, 20)
   ball_colors = {
       'cue': ([128, 128, 128], [255, 255, 255]),
   }
@@ -47,15 +47,13 @@ class GameInfo(object):
         logging.info('Position of {} is now {}'.format(ball, pos))
         self.balls[ball] = pos
 
-    #cv2.imshow('poolcam', cue[y:y + h, x:x + w])
-    cv2.waitKey(10)
-
   def stream(self):
     """call step and render for as long as we have images."""
     for img in self.reader:
       self.step(img)
       img = self.render(img)
       yield img
+      cv2.waitKey(10)
 
   def render(self, img):
     """Marks up an image based on our current state."""
