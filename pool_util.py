@@ -1,9 +1,11 @@
+"""Does openCV detection stuff related to pool"""
+
 import cv2
 import numpy as np
 from cv_util import CVUtil
 
 def get_background(stream):
-  # Gather a background reading to determine the play area.
+  """Gather a background reading to determine the play area."""
   background = []
   for img in stream:
     background.append(img)
@@ -12,12 +14,15 @@ def get_background(stream):
       break
   return background
 
-def find_play_area(imgs):
+def find_play_area(stream):
+  """Finds the current play area (edge of the felt)."""
+  imgs = get_background(stream)
   rects = zip(*map(CVUtil.find_biggest_rect, imgs)) # ([x, x, x], [y, y, y], ...)
   means = map(np.mean, rects)
   return tuple(map(int, means))
 
 def mask(img, boundary):
+  """Masks an image based on a color boundary."""
   lower = np.array(boundary[0], dtype="uint8")
   upper = np.array(boundary[1], dtype="uint8")
   mask = cv2.inRange(img, lower, upper)

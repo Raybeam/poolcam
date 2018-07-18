@@ -4,6 +4,22 @@ import logging
 from poolcam_reader import PoolcamReader
 
 class GameInfo(object):
+  """Contains info about the state of a pool game.
+
+    Properties:
+      URL: the URL of the game
+      reader: the PoolcamReader we're fetching images from
+      balls: A dictionary of last seen ball positions as {ballname: (x, y, r)}
+      ball_radius: the min and max potential radius of a ball in pixels
+      ball_colors: the min and max color range for a given ball
+      background: the (x, y, w, h) of the playing field for normalization
+
+    Methods:
+      calibrate: Set up pre-game stuff, such as finding background and lighting
+      step: Get information from a raw game image
+      render: Marks up an image based on our current state.
+      stream: call step, render, and cv2.imshow for as long as we have images.
+  """
   ball_radius = (10, 20)
   ball_colors = {
       'cue': ([128, 128, 128], [255, 255, 255]),
@@ -15,8 +31,8 @@ class GameInfo(object):
     self.balls = {name: None for name in self.ball_colors}
 
   def calibrate(self):
-    background = pool_util.get_background(self.reader)
-    self.background = pool_util.find_play_area(background) # x, y, w, h
+    """Set up pre-game stuff, such as finding background and lighting."""
+    self.background = pool_util.find_play_area(self.reader) # x, y, w, h
 
   def step(self, img):
     # Update ball positions
@@ -34,6 +50,7 @@ class GameInfo(object):
     cv2.waitKey(10)
 
   def stream(self):
+    """call step, render, and cv2.imshow for as long as we have images."""
     for img in self.reader:
       self.step(img)
       img = self.render(img)

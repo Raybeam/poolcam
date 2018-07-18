@@ -1,3 +1,4 @@
+"""`python main.py` to run this application."""
 import logging
 import sys
 import cv2
