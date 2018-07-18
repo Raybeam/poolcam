@@ -23,12 +23,12 @@ def mask(img, boundary):
   mask = cv2.inRange(img, lower, upper)
   return cv2.bitwise_and(img, img, mask=mask)
 
-def find_ball(img, color_boundary):
+def find_ball(img, color_boundary, minRadius=5, maxRadius=20):
   """Finds a ball in img based on the color boundary."""
   img = mask(img, color_boundary)
   img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
   cv2.GaussianBlur(img, (9, 9), 2);
-  candidates = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 3, 10, minRadius=5, maxRadius=30)#, None, 10, 50, 5, 500)
+  candidates = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 3, 10, minRadius=minRadius, maxRadius=maxRadius)
   if candidates is None:
     return None
   return candidates[0][0]

@@ -4,6 +4,7 @@ import logging
 from poolcam_reader import PoolcamReader
 
 class GameInfo(object):
+  ball_radius = (10, 20)
   ball_colors = {
       'cue': ([128, 128, 128], [255, 255, 255]),
   }
@@ -20,7 +21,11 @@ class GameInfo(object):
   def step(self, img):
     # Update ball positions
     for ball, color in self.ball_colors.items():
-      pos = pool_util.find_ball(img, color)
+      pos = pool_util.find_ball(
+          img,
+          color,
+          minRadius=self.ball_radius[0],
+          maxRadius=self.ball_radius[1])
       if pos is not None and pos.any():
         logging.info('Position of {} is now {}'.format(ball, pos))
         self.balls[ball] = pos
