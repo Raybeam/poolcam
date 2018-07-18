@@ -8,6 +8,10 @@ Install opencv 3.x (be sure to include FFMPEG support)
 # Running
 just `python main.py`
 
+if you want to run a local mjpeg server to serve the rendered results, run:
+
+`python main.py --server`
+
 # Developing
 All of what we know about a game is contained in `GameInfo`.  Update the docs as you add stuff
 
